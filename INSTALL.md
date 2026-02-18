@@ -2,6 +2,18 @@
 
 This guide explains how to install **UART Log Viewer** on Ubuntu, macOS, and Windows. No Qt or Python is required for end users.
 
+## Build From Source (All Platforms)
+Use this only if you want to build the installers yourself.
+
+### 1) Clone the repo
+```bash
+git clone https://github.com/jay28panchal/uart-log-viewer.git
+cd uart-log-viewer
+```
+
+### 2) Build installers
+Choose your platform below.
+
 ## Ubuntu 20.04+
 ### Install
 1. Download the `.deb` file (example: `uart-log-viewer_1.0.1_amd64.deb`).
@@ -25,6 +37,13 @@ sudo apt-get install ./uart-log-viewer_1.0.1_amd64.deb
 ### Launch
 Open the application menu and run **UART Log Viewer**.
 
+### Build Installer (From Source)
+From the repo folder:
+```bash
+./scripts/build-qt-linux.sh
+```
+Then install the generated `.deb` from `dist/`.
+
 ---
 
 ## macOS 12+
@@ -44,6 +63,13 @@ open UART-Log-Viewer.dmg
 
 ### Launch
 Open **Applications** and run **UART Log Viewer**.
+
+### Build Installer (From Source)
+From the repo folder:
+```bash
+./scripts/build-qt-mac.sh
+```
+Then open `dist/UART-Log-Viewer.dmg` and drag the app into **Applications**.
 
 ### Notes
 If macOS blocks the app:
@@ -67,6 +93,13 @@ Start-Process .\\UART-Log-Viewer-Setup.exe
 
 ### Launch
 Use Start Menu or Desktop shortcut (if chosen during install).
+
+### Build Installer (From Source)
+From the repo folder (PowerShell):
+```powershell
+./scripts/build-qt-win.ps1
+```
+Then open `dist\\UART-Log-Viewer-Setup.exe` and follow the wizard.
 
 ---
 
