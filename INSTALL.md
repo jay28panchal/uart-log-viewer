@@ -37,6 +37,15 @@ sudo apt-get install ./uart-log-viewer_1.0.1_amd64.deb
 ### Launch
 Open the application menu and run **UART Log Viewer**.
 
+### If You See “Qt_6.5 not found”
+You installed a package built against a newer Qt than your system provides.
+Download the latest `.deb` from **GitHub Releases** and reinstall it; it is built against the system Qt version.
+If you still see the error, install the Qt 6 runtime packages:
+
+```bash
+sudo apt-get install -y libqt6core6 libqt6gui6 libqt6widgets6 libqt6serialport6
+```
+
 ### Build Installer (From Source)
 From the repo folder:
 ```bash

@@ -12,14 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: jurplel/install-qt-action@v4
-        with:
-          version: '6.5.3'
-          modules: 'qtserialport'
       - name: Install DEB tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y ninja-build dpkg-dev fakeroot
+          sudo apt-get install -y ninja-build dpkg-dev fakeroot qt6-base-dev qt6-serialport-dev
       - name: Build DEB (Qt)
         run: |
           chmod +x scripts/build-qt-linux.sh
