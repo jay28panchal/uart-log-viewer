@@ -23,6 +23,17 @@ mkdir -p "$APPDIR/usr/share/applications" "$APPDIR/usr/share/icons/hicolor/scala
 cp "$ROOT/cpp/resources/uart-log-viewer.desktop" "$APPDIR/usr/share/applications/"
 cp "$ROOT/cpp/resources/uart-log-viewer.svg" "$APPDIR/usr/share/icons/hicolor/scalable/apps/"
 
+# Custom AppRun to prefer X11 (avoids missing wayland plugin errors)
+APP_RUN="$BUILD/AppRun"
+cat > "$APP_RUN" <<'APPRUN'
+#!/usr/bin/env bash
+set -e
+export QT_QPA_PLATFORM="${QT_QPA_PLATFORM:-xcb}"
+HERE="$(dirname "$(readlink -f "$0")")"
+exec "$HERE/usr/bin/uart-log-viewer" "$@"
+APPRUN
+chmod +x "$APP_RUN"
+
 # Bundle Qt libs using linuxdeploy
 LINUXDEPLOY="$TOOLS/linuxdeploy-x86_64.AppImage"
 PLUGIN_QT="$TOOLS/linuxdeploy-plugin-qt-x86_64.AppImage"
@@ -50,6 +61,7 @@ export APPIMAGE_EXTRACT_AND_RUN=1
   -e "$APPDIR/usr/bin/uart-log-viewer" \
   -d "$APPDIR/usr/share/applications/uart-log-viewer.desktop" \
   -i "$APPDIR/usr/share/icons/hicolor/scalable/apps/uart-log-viewer.svg" \
+  --custom-apprun "$APP_RUN" \
   --plugin qt --output appimage || true
 
 # linuxdeploy may already produce AppImage; if not, use appimagetool
