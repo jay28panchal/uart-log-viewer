@@ -14,24 +14,24 @@ cd uart-log-viewer
 ### 2) Build installers
 Choose your platform below.
 
-## Ubuntu 20.04+
+## Ubuntu 20.04+ (Minimum)
 ### Install
-1. Download the `.deb` file (example: `uart-log-viewer_1.0.1_amd64.deb`).
+1. Download the `.deb` file (example: `uart-log-viewer_1.0.2_amd64.deb`).
 2. Double-click the `.deb` file to open Ubuntu Software.
 3. Click **Install**.
 
 ### Alternative (Terminal)
 ```bash
-sudo apt-get install ./uart-log-viewer_1.0.1_amd64.deb
+sudo apt-get install ./uart-log-viewer_1.0.2_amd64.deb
 ```
 
 ### Download From GitHub (Terminal)
-Replace `<version>` with the release tag (example: `v1.0.1`).
+Replace `<version>` with the release tag (example: `v1.0.2`).
 
 ```bash
-curl -L -o uart-log-viewer_1.0.1_amd64.deb \
-  https://github.com/jay28panchal/uart-log-viewer/releases/download/<version>/uart-log-viewer_1.0.1_amd64.deb
-sudo apt-get install ./uart-log-viewer_1.0.1_amd64.deb
+curl -L -o uart-log-viewer_1.0.2_amd64.deb \
+  https://github.com/jay28panchal/uart-log-viewer/releases/download/<version>/uart-log-viewer_1.0.2_amd64.deb
+sudo apt-get install ./uart-log-viewer_1.0.2_amd64.deb
 ```
 
 ### Launch
@@ -46,6 +46,10 @@ If you still see the error, install the Qt 6 runtime packages:
 sudo apt-get install -y libqt6core6 libqt6gui6 libqt6widgets6 libqt6serialport6
 ```
 
+### Upgrading From Older Versions
+If you already have an older version installed, installing the new `.deb` will **upgrade** it automatically.
+If you used the older Python/Tkinter package (`uart-tabs`), the new package will replace it.
+
 ### Build Installer (From Source)
 From the repo folder:
 ```bash
@@ -55,14 +59,14 @@ Then install the generated `.deb` from `dist/`.
 
 ---
 
-## macOS 12+
+## macOS 12+ (Minimum)
 ### Install
 1. Download `UART-Log-Viewer.dmg`.
 2. Double-click the `.dmg`.
 3. Drag **UART Log Viewer** into **Applications**.
 
 ### Download From GitHub (Terminal)
-Replace `<version>` with the release tag (example: `v1.0.1`).
+Replace `<version>` with the release tag (example: `v1.0.2`).
 
 ```bash
 curl -L -o UART-Log-Viewer.dmg \
@@ -87,13 +91,13 @@ If macOS blocks the app:
 
 ---
 
-## Windows 10+
+## Windows 10+ (Minimum)
 ### Install
 1. Download `UART-Log-Viewer-Setup.exe`.
 2. Double-click the installer and follow the wizard.
 
 ### Download From GitHub (PowerShell)
-Replace `<version>` with the release tag (example: `v1.0.1`).
+Replace `<version>` with the release tag (example: `v1.0.2`).
 
 ```powershell
 Invoke-WebRequest -Uri "https://github.com/jay28panchal/uart-log-viewer/releases/download/<version>/UART-Log-Viewer-Setup.exe" -OutFile "UART-Log-Viewer-Setup.exe"

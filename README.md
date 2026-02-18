@@ -2,7 +2,7 @@
 
 Cross-platform serial monitor with tabs, timestamps, search, theming, and send box.
 
-## Platforms
+## Minimum OS Requirements
 - Ubuntu 20.04+
 - macOS 12+
 - Windows 10+
@@ -12,7 +12,7 @@ Cross-platform serial monitor with tabs, timestamps, search, theming, and send b
 Install the provided `.deb`:
 
 ```bash
-sudo apt-get install ./uart-log-viewer_1.0.1_amd64.deb
+sudo apt-get install ./uart-log-viewer_1.0.2_amd64.deb
 ```
 
 ### Windows/macOS
