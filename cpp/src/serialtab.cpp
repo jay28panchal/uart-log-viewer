@@ -4,6 +4,8 @@
 #include <QVBoxLayout>
 #include <QTextCursor>
 #include <QMessageBox>
+#include <QFileDialog>
+#include <QFile>
 
 static const QStringList kBaudRates = {
     "300", "600", "1200", "2400", "4800", "9600", "19200",
@@ -18,7 +20,7 @@ SerialTab::SerialTab(const QString& portName, QWidget* parent)
 
     m_baudCombo = new QComboBox(this);
     m_baudCombo->addItems(kBaudRates);
-    m_baudCombo->setCurrentText("115200");
+    m_baudCombo->setCurrentText("230400");
 
     m_connectBtn = new QPushButton("Connect", this);
     connect(m_connectBtn, &QPushButton::clicked, this, &SerialTab::toggleConnect);
@@ -26,10 +28,12 @@ SerialTab::SerialTab(const QString& portName, QWidget* parent)
     m_sendEdit = new QLineEdit(this);
     m_sendBtn = new QPushButton("Enter", this);
     m_clearBtn = new QPushButton("Clear", this);
+    m_logBtn = new QPushButton("Log...", this);
 
     connect(m_sendBtn, &QPushButton::clicked, this, &SerialTab::sendLine);
     connect(m_clearBtn, &QPushButton::clicked, this, &SerialTab::clearSend);
     connect(m_sendEdit, &QLineEdit::returnPressed, this, &SerialTab::sendLine);
+    connect(m_logBtn, &QPushButton::clicked, this, &SerialTab::toggleLogging);
 
     m_statusLabel = new QLabel("Disconnected", this);
 
@@ -44,6 +48,7 @@ SerialTab::SerialTab(const QString& portName, QWidget* parent)
     sendRow->addWidget(m_sendEdit);
     sendRow->addWidget(m_sendBtn);
     sendRow->addWidget(m_clearBtn);
+    sendRow->addWidget(m_logBtn);
 
     auto layout = new QVBoxLayout(this);
     layout->addLayout(topRow);
@@ -57,6 +62,10 @@ SerialTab::SerialTab(const QString& portName, QWidget* parent)
     m_timeZone = QTimeZone::systemTimeZone();
 }
 
+SerialTab::~SerialTab() {
+    stopLogging();
+}
+
 void SerialTab::setConnectedUi(bool connected) {
     m_connectBtn->setText(connected ? "Disconnect" : "Connect");
     m_statusLabel->setText(connected ? QString("Connected @ %1").arg(m_baudCombo->currentText()) : "Disconnected");
@@ -67,6 +76,7 @@ void SerialTab::toggleConnect() {
     if (m_serial.isOpen()) {
         m_serial.close();
         setConnectedUi(false);
+        stopLogging("Disconnected");
         return;
     }
 
@@ -101,7 +111,9 @@ void SerialTab::onReadyRead() {
     text.replace("\r\n", "\n");
     text.replace("\r", "\n");
 
-    appendText(formatWithTimestamp(text));
+    const QString formatted = formatWithTimestamp(text);
+    appendText(formatted);
+    writeLog(formatted);
 }
 
 void SerialTab::onErrorOccurred(QSerialPort::SerialPortError error) {
@@ -110,13 +122,16 @@ void SerialTab::onErrorOccurred(QSerialPort::SerialPortError error) {
     if (error == QSerialPort::ResourceError || error == QSerialPort::DeviceNotFoundError) {
         m_serial.close();
         setConnectedUi(false);
-        QMessageBox::warning(this, "UART Log Viewer", QString("Port %1 disconnected.").arg(m_portName));
+        m_statusLabel->setText(QString("Disconnected (port removed)"));
+        emit statusChanged(m_statusLabel->text());
+        stopLogging("Port removed");
     }
 }
 
 void SerialTab::sendLine() {
     if (!m_serial.isOpen()) {
-        QMessageBox::warning(this, "UART Log Viewer", "Port not connected.");
+        m_statusLabel->setText("Disconnected (not connected)");
+        emit statusChanged(m_statusLabel->text());
         return;
     }
     const QString data = m_sendEdit->text();
@@ -130,11 +145,57 @@ void SerialTab::clearSend() {
     m_sendEdit->clear();
 }
 
+void SerialTab::toggleLogging() {
+    if (m_logging) {
+        stopLogging("Logging stopped");
+        return;
+    }
+
+    QString defaultName = QString("uart_log_%1.txt").arg(m_portName);
+    QString path = QFileDialog::getSaveFileName(this, "Start Log", defaultName, "Text Files (*.txt);;All Files (*)");
+    if (path.isEmpty()) return;
+
+    m_logFile = new QFile(path, this);
+    if (!m_logFile->open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append)) {
+        QMessageBox::warning(this, "UART Log Viewer", "Failed to open log file.");
+        delete m_logFile;
+        m_logFile = nullptr;
+        return;
+    }
+
+    m_logging = true;
+    m_logBtn->setText("Stop Log");
+    m_statusLabel->setText(QString("Logging to %1").arg(path));
+    emit statusChanged(m_statusLabel->text());
+}
+
 void SerialTab::appendText(const QString& text) {
     QTextCursor cursor = m_textEdit->textCursor();
     cursor.movePosition(QTextCursor::End);
     cursor.insertText(text);
     m_textEdit->setTextCursor(cursor);
+}
+
+void SerialTab::writeLog(const QString& text) {
+    if (!m_logging || !m_logFile) return;
+    m_logFile->write(text.toUtf8());
+    m_logFile->flush();
+}
+
+void SerialTab::stopLogging(const QString& reason) {
+    if (!m_logging) return;
+    m_logging = false;
+    if (m_logFile) {
+        m_logFile->flush();
+        m_logFile->close();
+        m_logFile->deleteLater();
+        m_logFile = nullptr;
+    }
+    m_logBtn->setText("Log...");
+    if (!reason.isEmpty()) {
+        m_statusLabel->setText(reason);
+        emit statusChanged(m_statusLabel->text());
+    }
 }
 
 QString SerialTab::formatWithTimestamp(const QString& text) {
