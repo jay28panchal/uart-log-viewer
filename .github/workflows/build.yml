@@ -16,6 +16,10 @@ jobs:
         with:
           version: '6.5.3'
           modules: 'qtserialport'
+      - name: Install DEB tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build dpkg-dev fakeroot
       - name: Build DEB (Qt)
         run: |
           chmod +x scripts/build-qt-linux.sh
