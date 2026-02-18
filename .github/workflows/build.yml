@@ -12,26 +12,18 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.5.3'
+          modules: 'qtserialport'
       - name: Install build tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y software-properties-common
-          sudo add-apt-repository universe
-          sudo apt-get update
-          sudo apt-get install -y ninja-build dpkg-dev fakeroot qt6-base-dev qt6-serialport-dev curl
+          sudo apt-get install -y ninja-build curl
       - name: Build AppImage (Qt)
         run: |
           chmod +x scripts/build-qt-linux-appimage.sh
           ./scripts/build-qt-linux-appimage.sh
-      - name: Build DEB (Qt)
-        run: |
-          chmod +x scripts/build-qt-linux.sh
-          ./scripts/build-qt-linux.sh
-      - name: Upload DEB
-        uses: actions/upload-artifact@v4
-        with:
-          name: ubuntu-deb
-          path: dist/*.deb
       - name: Upload AppImage
         uses: actions/upload-artifact@v4
         with:
@@ -84,10 +76,6 @@ jobs:
     needs: [build-ubuntu, build-windows, build-macos]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: ubuntu-deb
-          path: release/
       - uses: actions/download-artifact@v4
         with:
           name: ubuntu-appimage
