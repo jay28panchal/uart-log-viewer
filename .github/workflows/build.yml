@@ -12,13 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: jurplel/install-qt-action@v4
         with:
-          python-version: '3.11'
-      - name: Build DEB
+          version: '6.5.3'
+          modules: 'qtserialport'
+      - name: Build DEB (Qt)
         run: |
-          chmod +x scripts/build-deb.sh
-          ./scripts/build-deb.sh
+          chmod +x scripts/build-qt-linux.sh
+          ./scripts/build-qt-linux.sh
       - name: Upload DEB
         uses: actions/upload-artifact@v4
         with:
@@ -29,17 +30,15 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: jurplel/install-qt-action@v4
         with:
-          python-version: '3.11'
-      - name: Build EXE
+          version: '6.5.3'
+          modules: 'qtserialport'
+      - name: Build EXE (Qt)
         run: |
-          powershell -ExecutionPolicy Bypass -File scripts/build-win.ps1
+          powershell -ExecutionPolicy Bypass -File scripts/build-qt-win.ps1
       - name: Install Inno Setup
         run: choco install innosetup -y
-      - name: Build Installer
-        run: |
-          iscc scripts\installer-win.iss
       - name: Upload Windows Installer
         uses: actions/upload-artifact@v4
         with:
@@ -50,17 +49,18 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
       - name: Install create-dmg
         run: |
           brew update
           brew install create-dmg
-      - name: Build DMG
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.5.3'
+          modules: 'qtserialport'
+      - name: Build DMG (Qt)
         run: |
-          chmod +x scripts/build-mac.sh
-          ./scripts/build-mac.sh
+          chmod +x scripts/build-qt-mac.sh
+          ./scripts/build-qt-mac.sh
       - name: Upload macOS DMG
         uses: actions/upload-artifact@v4
         with:
