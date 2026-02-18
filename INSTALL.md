@@ -16,11 +16,23 @@ Choose your platform below.
 
 ## Ubuntu 20.04+ (Minimum)
 ### Install
+**Recommended (No extra installs): AppImage**
+1. Download the AppImage (example: `uart-log-viewer_1.0.2-x86_64.AppImage`).
+2. Right‑click the file → **Properties** → enable **Allow executing file as program**.
+3. Double‑click to run.
+
+**Alternative: DEB**
 1. Download the `.deb` file (example: `uart-log-viewer_1.0.2_amd64.deb`).
 2. Double-click the `.deb` file to open Ubuntu Software.
 3. Click **Install**.
 
-### Alternative (Terminal)
+### AppImage (Terminal)
+```bash
+chmod +x uart-log-viewer_1.0.2-x86_64.AppImage
+./uart-log-viewer_1.0.2-x86_64.AppImage
+```
+
+### DEB (Terminal)
 ```bash
 sudo apt-get install ./uart-log-viewer_1.0.2_amd64.deb
 ```
@@ -29,6 +41,12 @@ sudo apt-get install ./uart-log-viewer_1.0.2_amd64.deb
 Replace `<version>` with the release tag (example: `v1.0.2`).
 
 ```bash
+curl -L -o uart-log-viewer_1.0.2-x86_64.AppImage \
+  https://github.com/jay28panchal/uart-log-viewer/releases/download/<version>/uart-log-viewer_1.0.2-x86_64.AppImage
+chmod +x uart-log-viewer_1.0.2-x86_64.AppImage
+./uart-log-viewer_1.0.2-x86_64.AppImage
+
+# Optional .deb:
 curl -L -o uart-log-viewer_1.0.2_amd64.deb \
   https://github.com/jay28panchal/uart-log-viewer/releases/download/<version>/uart-log-viewer_1.0.2_amd64.deb
 sudo apt-get install ./uart-log-viewer_1.0.2_amd64.deb
@@ -56,6 +74,13 @@ From the repo folder:
 ./scripts/build-qt-linux.sh
 ```
 Then install the generated `.deb` from `dist/`.
+
+### Build AppImage (From Source)
+From the repo folder:
+```bash
+./scripts/build-qt-linux-appimage.sh
+```
+Then run the generated AppImage from `dist/`.
 
 ---
 

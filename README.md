@@ -8,6 +8,14 @@ Cross-platform serial monitor with tabs, timestamps, search, theming, and send b
 - Windows 10+
 
 ## End-user installation
+### Ubuntu (AppImage, recommended)
+Download and run the AppImage (no extra installs):
+
+```bash
+chmod +x uart-log-viewer_1.0.2-x86_64.AppImage
+./uart-log-viewer_1.0.2-x86_64.AppImage
+```
+
 ### Ubuntu (DEB)
 Install the provided `.deb`:
 
