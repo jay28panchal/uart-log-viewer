@@ -44,7 +44,13 @@ fi
 # Ensure Qt tools are in PATH
 export PATH="$PATH:/usr/lib/qt6/bin:/usr/lib/x86_64-linux-gnu/qt6/bin"
 
-"$LINUXDEPLOY" --appdir "$APPDIR" --plugin qt --output appimage --appimage-extract-and-run || true
+# linuxdeploy wants desktop + icon + executable
+export APPIMAGE_EXTRACT_AND_RUN=1
+"$LINUXDEPLOY" --appdir "$APPDIR" \
+  -e "$APPDIR/usr/bin/uart-log-viewer" \
+  -d "$APPDIR/usr/share/applications/uart-log-viewer.desktop" \
+  -i "$APPDIR/usr/share/icons/hicolor/scalable/apps/uart-log-viewer.svg" \
+  --plugin qt --output appimage || true
 
 # linuxdeploy may already produce AppImage; if not, use appimagetool
 APP_OUT="$DIST/uart-log-viewer_${APP_VERSION}-x86_64.AppImage"
