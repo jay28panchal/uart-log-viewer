@@ -13,6 +13,15 @@ This guide explains how to install **UART Log Viewer** on Ubuntu, macOS, and Win
 sudo apt-get install ./uart-log-viewer_1.0.1_amd64.deb
 ```
 
+### Download From GitHub (Terminal)
+Replace `<version>` with the release tag (example: `v1.0.1`).
+
+```bash
+curl -L -o uart-log-viewer_1.0.1_amd64.deb \
+  https://github.com/jay28panchal/uart-log-viewer/releases/download/<version>/uart-log-viewer_1.0.1_amd64.deb
+sudo apt-get install ./uart-log-viewer_1.0.1_amd64.deb
+```
+
 ### Launch
 Open the application menu and run **UART Log Viewer**.
 
@@ -23,6 +32,15 @@ Open the application menu and run **UART Log Viewer**.
 1. Download `UART-Log-Viewer.dmg`.
 2. Double-click the `.dmg`.
 3. Drag **UART Log Viewer** into **Applications**.
+
+### Download From GitHub (Terminal)
+Replace `<version>` with the release tag (example: `v1.0.1`).
+
+```bash
+curl -L -o UART-Log-Viewer.dmg \
+  https://github.com/jay28panchal/uart-log-viewer/releases/download/<version>/UART-Log-Viewer.dmg
+open UART-Log-Viewer.dmg
+```
 
 ### Launch
 Open **Applications** and run **UART Log Viewer**.
@@ -38,6 +56,14 @@ If macOS blocks the app:
 ### Install
 1. Download `UART-Log-Viewer-Setup.exe`.
 2. Double-click the installer and follow the wizard.
+
+### Download From GitHub (PowerShell)
+Replace `<version>` with the release tag (example: `v1.0.1`).
+
+```powershell
+Invoke-WebRequest -Uri "https://github.com/jay28panchal/uart-log-viewer/releases/download/<version>/UART-Log-Viewer-Setup.exe" -OutFile "UART-Log-Viewer-Setup.exe"
+Start-Process .\\UART-Log-Viewer-Setup.exe
+```
 
 ### Launch
 Use Start Menu or Desktop shortcut (if chosen during install).
