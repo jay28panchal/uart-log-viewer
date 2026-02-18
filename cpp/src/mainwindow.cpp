@@ -12,6 +12,7 @@
 #include <QPalette>
 #include <QFile>
 #include <QApplication>
+#include <QTabBar>
 
 static QStringList filterPorts(const QList<QSerialPortInfo>& infos) {
     QStringList ports;
@@ -39,6 +40,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     m_tabs = new QTabWidget(this);
     setCentralWidget(m_tabs);
+    m_tabs->tabBar()->setMovable(false);
 
     m_timeZone = QTimeZone::systemTimeZone();
 
@@ -69,22 +71,13 @@ MainWindow::MainWindow(QWidget* parent)
     m_themeDark->setChecked(true);
 
     applyTheme(true);
-    refreshPorts();
+    ensurePlusTab();
 }
 
 void MainWindow::refreshPorts() {
     const QStringList ports = availablePorts();
-    if (ports.isEmpty() && m_tabs->count() == 0) {
+    if (ports.isEmpty()) {
         QMessageBox::information(this, "UART Log Viewer", "No serial ports detected.");
-        return;
-    }
-    if (m_tabs->count() == 0) {
-        for (const auto& port : ports) {
-            auto tab = new SerialTab(port, this);
-            tab->setTimestampEnabled(m_timestampAction->isChecked());
-            tab->setTimeZone(m_timeZone);
-            m_tabs->addTab(tab, port);
-        }
     }
 }
 
@@ -119,7 +112,9 @@ void MainWindow::newTab() {
     auto tab = new SerialTab(port, this);
     tab->setTimestampEnabled(m_timestampAction->isChecked());
     tab->setTimeZone(m_timeZone);
-    m_tabs->addTab(tab, port);
+    int insertAt = m_tabs->count();
+    if (m_plusTab) insertAt = m_tabs->indexOf(m_plusTab);
+    m_tabs->insertTab(insertAt, tab, port);
     m_tabs->setCurrentWidget(tab);
 }
 
@@ -239,4 +234,25 @@ void MainWindow::applyTheme(bool dark) {
         p.setColor(QPalette::HighlightedText, QColor("#ffffff"));
     }
     qApp->setPalette(p);
+}
+
+void MainWindow::ensurePlusTab() {
+    if (m_plusTab) return;
+    m_plusTab = new QWidget(this);
+    m_tabs->addTab(m_plusTab, "+");
+    connect(m_tabs->tabBar(), &QTabBar::tabBarClicked, this, [this](int index) {
+        if (isPlusTabIndex(index)) {
+            newTab();
+        }
+    });
+    connect(m_tabs, &QTabWidget::currentChanged, this, [this](int index) {
+        if (isPlusTabIndex(index)) {
+            int fallback = m_tabs->count() > 1 ? 0 : -1;
+            if (fallback >= 0) m_tabs->setCurrentIndex(fallback);
+        }
+    });
+}
+
+bool MainWindow::isPlusTabIndex(int index) const {
+    return m_plusTab && index == m_tabs->indexOf(m_plusTab);
 }

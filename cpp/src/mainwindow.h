@@ -29,6 +29,8 @@ private:
     SerialTab* currentTab() const;
     void applyTheme(bool dark);
     void highlightMatch(QTextEdit* textEdit, const QTextCursor& cursor);
+    void ensurePlusTab();
+    bool isPlusTabIndex(int index) const;
 
     QTabWidget* m_tabs;
     QAction* m_timestampAction;
@@ -36,4 +38,5 @@ private:
     QAction* m_themeLight;
     QTimeZone m_timeZone;
     FindDialog* m_findDialog = nullptr;
+    QWidget* m_plusTab = nullptr;
 };

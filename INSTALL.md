@@ -21,10 +21,8 @@ Choose your platform below.
 2. Right‑click the file → **Properties** → enable **Allow executing file as program**.
 3. Double‑click to run.
 
-**Alternative: DEB**
-1. Download the `.deb` file (example: `uart-log-viewer_1.0.2_amd64.deb`).
-2. Double-click the `.deb` file to open Ubuntu Software.
-3. Click **Install**.
+**Alternative: DEB (build locally)**
+If you prefer a `.deb`, build it locally from source (see below).
 
 ### AppImage (Terminal)
 ```bash
@@ -32,9 +30,10 @@ chmod +x uart-log-viewer_1.0.2-x86_64.AppImage
 ./uart-log-viewer_1.0.2-x86_64.AppImage
 ```
 
-### DEB (Terminal)
+### DEB (Terminal, build locally)
 ```bash
-sudo apt-get install ./uart-log-viewer_1.0.2_amd64.deb
+./scripts/build-qt-linux.sh
+sudo apt-get install ./dist/uart-log-viewer_1.0.2_amd64.deb
 ```
 
 ### Download From GitHub (Terminal)
@@ -46,10 +45,9 @@ curl -L -o uart-log-viewer_1.0.2-x86_64.AppImage \
 chmod +x uart-log-viewer_1.0.2-x86_64.AppImage
 ./uart-log-viewer_1.0.2-x86_64.AppImage
 
-# Optional .deb:
-curl -L -o uart-log-viewer_1.0.2_amd64.deb \
-  https://github.com/jay28panchal/uart-log-viewer/releases/download/<version>/uart-log-viewer_1.0.2_amd64.deb
-sudo apt-get install ./uart-log-viewer_1.0.2_amd64.deb
+# Optional .deb (build locally):
+./scripts/build-qt-linux.sh
+sudo apt-get install ./dist/uart-log-viewer_1.0.2_amd64.deb
 ```
 
 ### Launch
@@ -68,19 +66,19 @@ sudo apt-get install -y libqt6core6 libqt6gui6 libqt6widgets6 libqt6serialport6
 If you already have an older version installed, installing the new `.deb` will **upgrade** it automatically.
 If you used the older Python/Tkinter package (`uart-tabs`), the new package will replace it.
 
-### Build Installer (From Source)
-From the repo folder:
-```bash
-./scripts/build-qt-linux.sh
-```
-Then install the generated `.deb` from `dist/`.
-
 ### Build AppImage (From Source)
 From the repo folder:
 ```bash
 ./scripts/build-qt-linux-appimage.sh
 ```
 Then run the generated AppImage from `dist/`.
+
+### Build DEB (From Source)
+From the repo folder:
+```bash
+./scripts/build-qt-linux.sh
+```
+Then install the generated `.deb` from `dist/`.
 
 ---
 

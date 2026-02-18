@@ -57,6 +57,8 @@ set(CPACK_GENERATOR "DEB")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "UART Log Viewer")
 set(CPACK_PACKAGE_CONTACT "UART Log Viewer <support@local>")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt6widgets6, libqt6serialport6, libqt6core6, libqt6gui6")
+set(CPACK_DEBIAN_PACKAGE_CONFLICTS "uart-tabs")
+set(CPACK_DEBIAN_PACKAGE_REPLACES "uart-tabs")
 set(CPACK_PACKAGE_FILE_NAME "uart-log-viewer_${APP_VERSION}_amd64")
 
 include(CPack)

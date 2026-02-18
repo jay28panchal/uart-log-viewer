@@ -16,11 +16,12 @@ chmod +x uart-log-viewer_1.0.2-x86_64.AppImage
 ./uart-log-viewer_1.0.2-x86_64.AppImage
 ```
 
-### Ubuntu (DEB)
-Install the provided `.deb`:
+### Ubuntu (DEB, optional)
+Build locally if you prefer a `.deb`:
 
 ```bash
-sudo apt-get install ./uart-log-viewer_1.0.2_amd64.deb
+./scripts/build-qt-linux.sh
+sudo apt-get install ./dist/uart-log-viewer_1.0.2_amd64.deb
 ```
 
 ### Windows/macOS
