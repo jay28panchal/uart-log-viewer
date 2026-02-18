@@ -1,0 +1,90 @@
+name: Build Installers
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Build DEB
+        run: |
+          chmod +x scripts/build-deb.sh
+          ./scripts/build-deb.sh
+      - name: Upload DEB
+        uses: actions/upload-artifact@v4
+        with:
+          name: ubuntu-deb
+          path: dist/*.deb
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Build EXE
+        run: |
+          powershell -ExecutionPolicy Bypass -File scripts/build-win.ps1
+      - name: Install Inno Setup
+        run: choco install innosetup -y
+      - name: Build Installer
+        run: |
+          iscc scripts\installer-win.iss
+      - name: Upload Windows Installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: '**/UART-Log-Viewer-Setup.exe'
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install create-dmg
+        run: |
+          brew update
+          brew install create-dmg
+      - name: Build DMG
+        run: |
+          chmod +x scripts/build-mac.sh
+          ./scripts/build-mac.sh
+      - name: Upload macOS DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-dmg
+          path: dist/*.dmg
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [build-ubuntu, build-windows, build-macos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: ubuntu-deb
+          path: release/
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-installer
+          path: release/
+      - uses: actions/download-artifact@v4
+        with:
+          name: macos-dmg
+          path: release/
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/*
