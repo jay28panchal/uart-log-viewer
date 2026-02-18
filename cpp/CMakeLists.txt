@@ -36,6 +36,7 @@ set_target_properties(uart-log-viewer PROPERTIES
 
 install(TARGETS uart-log-viewer
     RUNTIME DESTINATION bin
+    BUNDLE DESTINATION .
 )
 
 include(CPack)
