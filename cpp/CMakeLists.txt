@@ -39,6 +39,16 @@ install(TARGETS uart-log-viewer
     BUNDLE DESTINATION .
 )
 
+install(FILES
+    "${CMAKE_SOURCE_DIR}/resources/uart-log-viewer.desktop"
+    DESTINATION share/applications
+)
+
+install(FILES
+    "${CMAKE_SOURCE_DIR}/resources/uart-log-viewer.svg"
+    DESTINATION share/icons/hicolor/scalable/apps
+)
+
 set(CPACK_PACKAGE_NAME "uart-log-viewer")
 file(READ "${CMAKE_SOURCE_DIR}/../VERSION" VERSION_FILE)
 string(STRIP "${VERSION_FILE}" APP_VERSION)

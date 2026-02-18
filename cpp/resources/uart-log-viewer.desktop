@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=UART Log Viewer
+Comment=Multi-UART viewer with per-port tabs
+Exec=uart-log-viewer
+Terminal=false
+Icon=uart-log-viewer
+Categories=Development;Utility;
