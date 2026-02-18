@@ -5,8 +5,9 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 BUILD="$ROOT/build/qt-linux-appimage"
 DIST="$ROOT/dist"
 APP_VERSION="$(cat "$ROOT/VERSION")"
+TOOLS="$BUILD/tools"
 
-mkdir -p "$BUILD" "$DIST"
+mkdir -p "$BUILD" "$DIST" "$TOOLS"
 
 cmake -S "$ROOT/cpp" -B "$BUILD" -G Ninja -DCMAKE_BUILD_TYPE=Release
 cmake --build "$BUILD" --target uart-log-viewer
@@ -23,9 +24,9 @@ cp "$ROOT/cpp/resources/uart-log-viewer.desktop" "$APPDIR/usr/share/applications
 cp "$ROOT/cpp/resources/uart-log-viewer.svg" "$APPDIR/usr/share/icons/hicolor/scalable/apps/"
 
 # Bundle Qt libs using linuxdeploy
-LINUXDEPLOY="$BUILD/linuxdeploy-x86_64.AppImage"
-PLUGIN_QT="$BUILD/linuxdeploy-plugin-qt-x86_64.AppImage"
-APPIMAGETOOL="$BUILD/appimagetool-x86_64.AppImage"
+LINUXDEPLOY="$TOOLS/linuxdeploy-x86_64.AppImage"
+PLUGIN_QT="$TOOLS/linuxdeploy-plugin-qt-x86_64.AppImage"
+APPIMAGETOOL="$TOOLS/appimagetool-x86_64.AppImage"
 
 if [ ! -f "$LINUXDEPLOY" ]; then
   curl -L -o "$LINUXDEPLOY" https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
@@ -46,10 +47,19 @@ export PATH="$PATH:/usr/lib/qt6/bin:/usr/lib/x86_64-linux-gnu/qt6/bin"
 "$LINUXDEPLOY" --appdir "$APPDIR" --plugin qt --output appimage --appimage-extract-and-run || true
 
 # linuxdeploy may already produce AppImage; if not, use appimagetool
-if ls "$BUILD"/*.AppImage >/dev/null 2>&1; then
-  mv "$BUILD"/*.AppImage "$DIST/"
+APP_OUT="$DIST/uart-log-viewer_${APP_VERSION}-x86_64.AppImage"
+FOUND_APP=""
+for f in "$BUILD"/*.AppImage; do
+  if [ -f "$f" ]; then
+    FOUND_APP="$f"
+    break
+  fi
+done
+
+if [ -n "$FOUND_APP" ]; then
+  mv "$FOUND_APP" "$APP_OUT"
 else
-  "$APPIMAGETOOL" "$APPDIR" "$DIST/uart-log-viewer-${APP_VERSION}-x86_64.AppImage"
+  "$APPIMAGETOOL" "$APPDIR" "$APP_OUT"
 fi
 
-echo "Built AppImage in $DIST"
+echo "Built AppImage: $APP_OUT"
