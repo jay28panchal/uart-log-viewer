@@ -9,7 +9,7 @@ Cross-platform serial monitor with tabs, timestamps, search, theming, and send b
 
 ## End-user installation
 ### Ubuntu (AppImage, recommended)
-Download and run the AppImage (no extra installs):
+Download and run the AppImage (no extra installs). The AppImage should be built on Ubuntu 20.04 to run on 20.04, 22.04, 24.04+:
 
 ```bash
 chmod +x uart-log-viewer_1.0.2-x86_64.AppImage
@@ -35,6 +35,12 @@ No Python required on end-user machines. Built with Qt.
 ### Ubuntu build (DEB, Qt)
 ```bash
 ./scripts/build-qt-linux.sh
+```
+
+### Ubuntu build (AppImage for 20.04/22.04/24.04+)
+Build on Ubuntu 20.04 (glibc 2.31) to maximize compatibility:
+```bash
+./scripts/build-qt-linux-appimage-ubuntu20.sh
 ```
 
 ### Windows build (EXE + installer, Qt)

@@ -21,6 +21,9 @@ Choose your platform below.
 2. Right‑click the file → **Properties** → enable **Allow executing file as program**.
 3. Double‑click to run.
 
+**Note about Ubuntu versions**
+To run on Ubuntu 20.04, 22.04, and 24.04+, the AppImage must be built on Ubuntu 20.04 (glibc 2.31). AppImages built on newer Ubuntu may fail on 20.04 with `GLIBC_2.xx not found`.
+
 **Alternative: DEB (build locally)**
 If you prefer a `.deb`, build it locally from source (see below).
 
@@ -70,6 +73,13 @@ If you used the older Python/Tkinter package (`uart-tabs`), the new package will
 From the repo folder:
 ```bash
 ./scripts/build-qt-linux-appimage.sh
+```
+Then run the generated AppImage from `dist/`.
+
+### Build AppImage for Ubuntu 20.04+ Compatibility
+Build on Ubuntu 20.04 to maximize compatibility with 20.04, 22.04, and 24.04+:
+```bash
+./scripts/build-qt-linux-appimage-ubuntu20.sh
 ```
 Then run the generated AppImage from `dist/`.
 

@@ -6,10 +6,20 @@ BUILD="$ROOT/build/qt-linux-appimage"
 DIST="$ROOT/dist"
 APP_VERSION="$(cat "$ROOT/VERSION")"
 TOOLS="$BUILD/tools"
+QT_ROOT="${QT_ROOT:-}"
 
 mkdir -p "$BUILD" "$DIST" "$TOOLS"
 
-cmake -S "$ROOT/cpp" -B "$BUILD" -G Ninja -DCMAKE_BUILD_TYPE=Release
+if [ -n "$QT_ROOT" ]; then
+  export PATH="$QT_ROOT/bin:$PATH"
+  export CMAKE_PREFIX_PATH="${QT_ROOT}:${CMAKE_PREFIX_PATH:-}"
+  if [ -x "$QT_ROOT/bin/qmake" ]; then
+    export QMAKE="$QT_ROOT/bin/qmake"
+  fi
+fi
+
+cmake -S "$ROOT/cpp" -B "$BUILD" -G Ninja -DCMAKE_BUILD_TYPE=Release \
+  ${CMAKE_PREFIX_PATH:+-DCMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH"}
 cmake --build "$BUILD" --target uart-log-viewer
 
 APPDIR="$BUILD/AppDir"
